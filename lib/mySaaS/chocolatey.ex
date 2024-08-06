@@ -9,8 +9,8 @@ defmodule Chocolatey do
           output
       end
     else
-      upgrade_package(package)
       IO.puts("Package #{package} is already installed, upgrading to latest version.")
+      upgrade_package(package)
     end
   end
 
