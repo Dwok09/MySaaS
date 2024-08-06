@@ -2,8 +2,7 @@ defmodule MySaaSWeb.PackagesLive do
   use MySaaSWeb, :live_view
 
   def mount(_params, _session, socket) do
-    packages = Chocolatey.get_current_packages
-    {:ok, assign(socket, packages: packages)}
+    {:ok, assign(socket, packages: Chocolatey.get_current_packages)}
   end
 
   def render(assigns) do
@@ -24,8 +23,8 @@ defmodule MySaaSWeb.PackagesLive do
             <tr>
               <td class="border px-4 py-2"><%= elem(package, 0) %><br></td>
               <td class="border px-4 py-2"><%= elem(package, 1) %><br></td>
-              <td class="border px-4 py-2"><button type="button">Update</button></td>
-              <td class="border px-4 py-2"><button type="button">Uninstall</button></td>
+              <td class="border px-4 py-2"><button phx-click="update_package" phx-value-package={elem(package, 0)} type="button">Update</button></td>
+              <td class="border px-4 py-2"><button phx-click="uninstall_package" phx-value-package={elem(package, 0)} type="button">Uninstall</button></td>
             </tr>
           <% end %>
         </table>
@@ -35,7 +34,16 @@ defmodule MySaaSWeb.PackagesLive do
   end
 
   def handle_event("refresh_packages", _params, socket) do
-    packages = Chocolatey.get_current_packages()
-    {:noreply, assign(socket, :packages, packages)}
+    {:noreply, assign(socket, packages: Chocolatey.get_current_packages())}
+  end
+
+  def handle_event("update_package", %{"package" => package}, socket) do
+    Chocolatey.upgrade_package(package)
+    {:noreply, assign(socket, packages: Chocolatey.get_current_packages())}
+  end
+
+  def handle_event("uninstall_package", %{"package" => package}, socket) do
+    Chocolatey.uninstall_package(package, Chocolatey.get_current_packages)
+    {:noreply, assign(socket, packages: Chocolatey.get_current_packages())}
   end
 end
