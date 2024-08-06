@@ -7,28 +7,36 @@ defmodule MySaaSWeb.PackagesLive do
 
   def render(assigns) do
     ~H"""
-    <div class="container">
-      <h1>Installed Packages</h1>
-      <%= if @packages == [] do %>
-        <p>No packages available.</p>
-      <% else %>
-        <table class="table-auto w-full">
-        <tr>
-          <th class="w-1/4 px-4 py-2">Name</th>
-          <th class="w-1/4 px-4 py-2">Version</th>
-          <th class="w-1/4 px-4 py-2"></th>
-          <th class="w-1/4 px-4 py-2"></th>
-        </tr>
-          <%= for package <- @packages do %>
+    <h1>Installed Applications</h1>
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <td class="border px-4 py-2"><%= elem(package, 0) %><br></td>
-              <td class="border px-4 py-2"><%= elem(package, 1) %><br></td>
-              <td class="border px-4 py-2"><button phx-click="update_package" phx-value-package={elem(package, 0)} type="button">Update</button></td>
-              <td class="border px-4 py-2"><button phx-click="uninstall_package" phx-value-package={elem(package, 0)} type="button">Uninstall</button></td>
+                <th scope="col" class="px-6 py-3">
+                    Name
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Version
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Update
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Uninstall
+                </th>
             </tr>
-          <% end %>
-        </table>
-      <% end %>
+        </thead>
+        <tbody>
+            <%= for package <- @packages do %>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"><%= elem(package, 0) %></th>
+                <td class="px-6 py-4"><%= elem(package, 1) %></td>
+                <td class="px-6 py-4"><button phx-click="update_package" phx-value-package={elem(package, 0)} type="button" class="text-blue-600 hover:text-blue-800">Update</button></td>
+                <td class="px-6 py-4"><button phx-click="uninstall_package" phx-value-package={elem(package, 0)} type="button" class="text-blue-600 hover:text-blue-800">Uninstall</button></td>
+            </tr>
+            <% end %>
+        </tbody>
+    </table>
     </div>
     """
   end

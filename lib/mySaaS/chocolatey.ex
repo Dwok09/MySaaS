@@ -51,12 +51,12 @@ defmodule Chocolatey do
   def get_current_packages do
     case System.cmd("choco", ["list"]) do
       {output, 0} ->
-        # Split the output into lines, filter out unwanted lines, and parse each line
         packages =
           output
           |> String.split("\n")
           |> Enum.filter(fn line ->
-            not (String.contains?(line, "Chocolatey v") or String.contains?(line, "packages installed"))
+            not (String.contains?(line, "Chocolatey v") or String.contains?(line, "packages installed")
+            or String.contains?(line, ".install") or String.match?(line, ~r/^kb\d+/i) or String.contains?(line, "chocolatey"))
           end)
           |> Enum.reduce(%{}, fn line, acc ->
             case String.split(line, " ") do
@@ -66,7 +66,7 @@ defmodule Chocolatey do
           end)
         packages
       {output, _} ->
-        IO.puts("Failed to get current Chocolatey packages")
+        IO.puts("Failed to get current packages")
         output
     end
   end
