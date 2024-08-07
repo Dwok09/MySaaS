@@ -15,7 +15,7 @@ defmodule Chocolatey do
   end
 
   def uninstall_package(package, current_packages) do
-    if not package_installed?(package, current_packages) do
+    if !package_installed?(package, current_packages) do
       IO.puts("Package #{package} is not installed.")
     else
       case System.cmd("choco", ["uninstall", package, "-y", "--remove-dependencies"]) do
